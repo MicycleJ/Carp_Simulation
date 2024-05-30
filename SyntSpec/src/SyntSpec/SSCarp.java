@@ -822,9 +822,18 @@ public class SSCarp {
 	        }
 	      
 	      } else {
-	        
-	        System.out.println("Fatal error: Mom has an inviable genotype");
-	        System.exit(0);
+	        /* this used to catch the case where mom was either GG or GL, which should be lethal
+	         * for sex skew though, no one cares  
+	         */
+	    	  double d = Math.random();
+		      if (d < 0.5D) {
+		        
+		        maternalGD = mom.getGenome().charAt(6);
+		      }
+		      else {
+		        
+		        maternalGD = mom.getGenome().charAt(7);
+		      } 
 	      }
 	    
 	    }
@@ -881,9 +890,16 @@ public class SSCarp {
 	        }
 	      
 	      } else {
-	        
-	        System.out.println("Fatal error: Dad has an inviable genotype");
-	        System.exit(0);
+	    	  /* this used to catch the case where mom was either GG or GL, which should be lethal
+		       * for sex skew though, no one cares  
+		       */
+		  	  double d = Math.random();
+		      if (d < 0.5D) {	        
+			      maternalGD = mom.getGenome().charAt(6);
+		      }
+		      else {	        
+			      maternalGD = mom.getGenome().charAt(7);
+			  } 
 	      }
 	    
 	    }
