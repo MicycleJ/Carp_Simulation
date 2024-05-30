@@ -66,6 +66,7 @@
 /*  65 */   public static double homingFrequency = 0.05D;
 /*  66 */   public static double NHEJfrequency = 0.05D;
 /* me  */   public static double editingFrequency = 1.0D;
+/* me  */   public static double maternalCarryoverFrequency = 1.0D;
 /*     */   
 /*  68 */   public static double SeiningOccurProbability = 0.0D;
 /*  69 */   public static double SeiningRemovePercent = 0.25D;

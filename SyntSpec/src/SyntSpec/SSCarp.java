@@ -620,6 +620,9 @@ public class SSCarp {
         
         potentialBaby = reproduceGeneral((SSGenomeCarps)currentMom, (SSGenomeCarps)currentDad, new SSGenomeCarps(currentBaby));
       }
+      else if (reproduceType == "AlleleSailMC") {
+    	  potentialBaby = reproduceMaternalCarryoverAS((SSGenomeCarps)currentMom, (SSGenomeCarps)currentDad, new SSGenomeCarps(currentBaby));
+      }
       else {
         
         System.out.println("ERROR! invalid/unknown reproduction type");
@@ -637,8 +640,124 @@ public class SSCarp {
     {
       return "Trojan";
     }
-    
+    else if (mom.getGenome().contains("Amc") || dad.getGenome().contains("Amc"))
+    {
+    	return "AlleleSailMC";
+    }
     return "FLExtended";
+  }
+  
+  public static SSGenomeCarps reproduceMaternalCarryoverAS(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
+	  int nextgen = Math.max(mom.generation, dad.generation);
+	  // generation information
+	  if (nextgen >= 0) {
+	    baby.generation = nextgen + 1;
+	  }
+	  else {
+	    baby.generation = nextgen;
+	  } 
+	  if (baby.generation >= SimConfigs.GENE_GENERATION_DEATH)
+	  {
+	    return null;
+	  }
+	  
+	  // get the number of sails in mom
+	  int momSailCount = 0;
+	  for (int i = 0; i < mom.getGenome().length(); i++) {
+	  	char temp = mom.getGenome().charAt(i);
+	  	if (temp == 'S') {
+	  		momSailCount++;
+	  	}
+	  }
+	  
+	  // get the number of sails in dad
+	  int dadSailCount = 0;
+	  for (int i = 0; i < dad.getGenome().length(); i++) {
+		  char temp = dad.getGenome().charAt(i);
+	  	  if (temp == 'S') {
+	  		  dadSailCount++;
+	  	  }
+	  }
+	  
+	  // initialize child genotype
+	  String childGenotypeAS = "Amc";
+	  
+	  // for a genotype AmcNNFF, we need to get the N loci (3 & 4), and then the F loci (5 & 6)
+	  for (int i = 3; i < mom.getGenome().length(); i += 2) {
+		  char maternalAllele = 'x';
+		  double rand = Math.random();
+		  if (rand < 0.5D) {
+	    	maternalAllele = mom.getGenome().charAt(0 + i);
+		  }
+		  else {
+	    	maternalAllele = mom.getGenome().charAt(1 + i);
+		  }
+		  if (maternalAllele == 'F' && momSailCount != 0) {
+	    	// get probability F remains an F
+	    	double escapeProbability = Math.pow((1-SimConfigs.editingFrequency), momSailCount);
+	    	rand = Math.random();
+	   		if (rand > escapeProbability) {
+	   			maternalAllele = 'M';
+	    	}
+		  }
+		  // maternal carryover may occur
+		  if (maternalAllele == 'F' && momSailCount != 0) {
+			  // get probability F remains an F
+			  double escapeProbability = Math.pow((1-SimConfigs.maternalCarryoverFrequency), momSailCount);
+		      rand = Math.random();
+		   	  if (rand > escapeProbability) {
+		   		  maternalAllele = 'M';
+		      }
+		  }
+	    	
+		  char paternalAllele = 'x';
+		  rand = Math.random();
+		  if (rand < 0.5D) {
+	    	paternalAllele = dad.getGenome().charAt(0 + i);
+		  }
+		  else {
+	    	paternalAllele = dad.getGenome().charAt(1 + i);
+		  }
+		  if (paternalAllele == 'F' && dadSailCount != 0) {
+	    	// get probability F remains an F
+	   		double escapeProbability = Math.pow((1-SimConfigs.editingFrequency), dadSailCount);
+	   		rand = Math.random();
+	   		if (rand > escapeProbability) {
+	   			paternalAllele = 'M';
+    		}
+	   	  }
+		  
+		  // maternal carryover may occur
+		  if (paternalAllele == 'F' && momSailCount != 0) {
+			  // get probability F remains an F
+			  double escapeProbability = Math.pow((1-SimConfigs.maternalCarryoverFrequency), momSailCount);
+		      rand = Math.random();
+		   	  if (rand > escapeProbability) {
+		   		paternalAllele = 'M';
+		      }
+		  }
+		  
+	    	
+		  childGenotypeAS = childGenotypeAS + maternalAllele + paternalAllele;
+	    	
+	  }
+	    
+	  baby.setGenome(childGenotypeAS);
+	  // set wild ??
+	    
+	  if (childGenotypeAS.contains("F")) {
+	    double rand = Math.random();
+	    if (rand < 0.5D) {
+	      baby.gender = "male";
+	    } else {
+		  baby.gender = "female";
+	    } 
+	  }
+	  else {
+		  baby.gender = "male";
+	  }
+	    
+	  return baby;
   }
   
   public static SSGenomeCarps reproduceTrojan(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
