@@ -623,6 +623,9 @@ public class SSCarp {
       else if (reproduceType == "AlleleSailMC") {
     	  potentialBaby = reproduceMaternalCarryoverAS((SSGenomeCarps)currentMom, (SSGenomeCarps)currentDad, new SSGenomeCarps(currentBaby));
       }
+      else if (reproduceType == "GeneDriveSexSkew") {
+    	  potentialBaby = reproduceGDMCSS((SSGenomeCarps)currentMom, (SSGenomeCarps)currentDad, new SSGenomeCarps(currentBaby));
+      }
       else {
         
         System.out.println("ERROR! invalid/unknown reproduction type");
@@ -643,6 +646,10 @@ public class SSCarp {
     else if (mom.getGenome().contains("Amc") || dad.getGenome().contains("Amc"))
     {
     	return "AlleleSailMC";
+    }
+    else if (mom.getGenome().contains("gdmcss") || dad.getGenome().contains("gdmcss"))
+    {
+    	return "GeneDriveSexSkew";
     }
     return "FLExtended";
   }
@@ -758,6 +765,176 @@ public class SSCarp {
 	  }
 	    
 	  return baby;
+  }
+  
+  public static SSGenomeCarps reproduceGDMCSS(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
+	  int nextgen = Math.max(mom.generation, dad.generation);
+	  // generation information
+	  if (nextgen >= 0) {
+	    baby.generation = nextgen + 1;
+	  }
+	  else {
+	    baby.generation = nextgen;
+	  } 
+	  if (baby.generation >= SimConfigs.GENE_GENERATION_DEATH)
+	  {
+	    return null;
+	  }
+	  
+	  char maternalGD = 'x';
+	    if (mom.getGenome().contains("G")) {
+	      
+	      if (mom.getGenome().contains("W")) {
+	        
+	        double d = Math.random();
+	        
+	        if (d <= SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D) {
+	          
+	          maternalGD = 'G';
+	        }
+	        else if (SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D < d && d < SimConfigs.homingFrequency * 0.5D + 0.5D) {
+	          
+	          double randB = Math.random();
+	          if (randB < 0.33D)
+	          {
+	            maternalGD = 'R';
+	          }
+	          else
+	          {
+	            maternalGD = 'L';
+	          }
+	        
+	        } else {
+	          
+	          maternalGD = 'W';
+	        }
+	      
+	      } else if (mom.getGenome().contains("R")) {
+	        
+	        double d = Math.random();
+	        if (d < 0.5D)
+	        {
+	          maternalGD = 'R';
+	        }
+	        else
+	        {
+	          maternalGD = 'G';
+	        }
+	      
+	      } else {
+	        
+	        System.out.println("Fatal error: Mom has an inviable genotype");
+	        System.exit(0);
+	      }
+	    
+	    }
+	    else {
+	      
+	      double d = Math.random();
+	      if (d < 0.5D) {
+	        
+	        maternalGD = mom.getGenome().charAt(0);
+	      }
+	      else {
+	        
+	        maternalGD = mom.getGenome().charAt(1);
+	      } 
+	    } 
+	    
+	    char paternalGD = 'x';
+	    if (dad.getGenome().contains("G")) {
+	      
+	      if (dad.getGenome().contains("W")) {
+	        
+	        double d = Math.random();
+	        if (d <= SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D) {
+	          
+	          paternalGD = 'G';
+	        }
+	        else if (SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D < d && d < SimConfigs.homingFrequency * 0.5D + 0.5D) {
+	          
+	          double randB = Math.random();
+	          if (randB < 0.33D)
+	          {
+	            paternalGD = 'R';
+	          }
+	          else
+	          {
+	            paternalGD = 'L';
+	          }
+	        
+	        } else {
+	          
+	          paternalGD = 'W';
+	        }
+	      
+	      } else if (dad.getGenome().contains("R")) {
+	        
+	        double d = Math.random();
+	        if (d < 0.5D)
+	        {
+	          paternalGD = 'R';
+	        }
+	        else
+	        {
+	          paternalGD = 'G';
+	        }
+	      
+	      } else {
+	        
+	        System.out.println("Fatal error: Dad has an inviable genotype");
+	        System.exit(0);
+	      }
+	    
+	    }
+	    else {
+	      
+	      double d = Math.random();
+	      if (d < 0.5D) {
+	        
+	        paternalGD = dad.getGenome().charAt(0);
+	      }
+	      else {
+	        
+	        paternalGD = dad.getGenome().charAt(1);
+	      } 
+	    } 
+	    
+	    /* check for maternal carryover. NOTE!! this is incorrect for homing frequencies < 1 and does not consider
+	     * resistance alleles or lof alleles
+	    */ 
+	    if (maternalGD == 'W' && mom.getGenome().contains("G")) {
+	    	// get probability W remains an W
+	    	double rand = Math.random();
+	    	if (rand < SimConfigs.maternalCarryoverFrequency) {
+	    		maternalGD = 'M';
+		    }
+	    }
+	    if (paternalGD == 'W' && mom.getGenome().contains("G")) {
+	    	// get probability W remains an W
+	    	double rand = Math.random();
+	    	if (rand < SimConfigs.maternalCarryoverFrequency) {
+	    		paternalGD = 'M';
+		    }
+	    }
+	    
+	    String childGenotypeGD = "gdmcss" + maternalGD + paternalGD;
+	    baby.setGenome(childGenotypeGD);
+	    
+	    // add in a sex skew ! GG = male
+	    if (childGenotypeGD.contains("W")) {
+		    double rand = Math.random();
+		    if (rand < 0.5D) {
+		      baby.gender = "male";
+		    } else {
+			  baby.gender = "female";
+		    } 
+		  }
+		  else {
+			  baby.gender = "male";
+		  }
+		    
+		  return baby;
   }
   
   public static SSGenomeCarps reproduceTrojan(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
