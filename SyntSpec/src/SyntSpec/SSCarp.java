@@ -833,11 +833,11 @@ public class SSCarp {
 	      double d = Math.random();
 	      if (d < 0.5D) {
 	        
-	        maternalGD = mom.getGenome().charAt(0);
+	        maternalGD = mom.getGenome().charAt(6);
 	      }
 	      else {
 	        
-	        maternalGD = mom.getGenome().charAt(1);
+	        maternalGD = mom.getGenome().charAt(7);
 	      } 
 	    } 
 	    
@@ -892,11 +892,11 @@ public class SSCarp {
 	      double d = Math.random();
 	      if (d < 0.5D) {
 	        
-	        paternalGD = dad.getGenome().charAt(0);
+	        paternalGD = dad.getGenome().charAt(6);
 	      }
 	      else {
 	        
-	        paternalGD = dad.getGenome().charAt(1);
+	        paternalGD = dad.getGenome().charAt(7);
 	      } 
 	    } 
 	    
