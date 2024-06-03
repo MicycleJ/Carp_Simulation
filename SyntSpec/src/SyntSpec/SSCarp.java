@@ -782,44 +782,30 @@ public class SSCarp {
 	  }
 	  
 	  char maternalGD = 'x';
-	    if (mom.getGenome().contains("G")) {
-	      
-	      if (mom.getGenome().contains("W")) {
-	        
-	        double d = Math.random();
-	        
-	        if (d <= SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D) {
-	          
+	  if (mom.getGenome().contains("G")) {
+		  if (mom.getGenome().contains("W")) {
+			  double d = Math.random();
+			  if (d <= SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D) {
+				  maternalGD = 'G';
+			  }
+			  else if (SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D < d && d < SimConfigs.homingFrequency * 0.5D + 0.5D) {
+				  double randB = Math.random();
+				  if (randB < 0.33D) {
+					  maternalGD = 'R';
+				  }
+				  else {
+					  maternalGD = 'L';
+				  }
+			  } else {
+				  maternalGD = 'W';
+			  }
+		  } else if (mom.getGenome().contains("R")) {
+			  double d = Math.random();
+			  if (d < 0.5D) {
+				  maternalGD = 'R';
+			  } else {
 	          maternalGD = 'G';
-	        }
-	        else if (SimConfigs.homingFrequency * (1.0D - SimConfigs.NHEJfrequency) * 0.5D + 0.5D < d && d < SimConfigs.homingFrequency * 0.5D + 0.5D) {
-	          
-	          double randB = Math.random();
-	          if (randB < 0.33D)
-	          {
-	            maternalGD = 'R';
 	          }
-	          else
-	          {
-	            maternalGD = 'L';
-	          }
-	        
-	        } else {
-	          
-	          maternalGD = 'W';
-	        }
-	      
-	      } else if (mom.getGenome().contains("R")) {
-	        
-	        double d = Math.random();
-	        if (d < 0.5D)
-	        {
-	          maternalGD = 'R';
-	        }
-	        else
-	        {
-	          maternalGD = 'G';
-	        }
 	      
 	      } else {
 	        /* this used to catch the case where mom was either GG or GL, which should be lethal
@@ -835,17 +821,14 @@ public class SSCarp {
 		        maternalGD = mom.getGenome().charAt(7);
 		      } 
 	      }
-	    
-	    }
+		}
 	    else {
 	      
 	      double d = Math.random();
 	      if (d < 0.5D) {
-	        
 	        maternalGD = mom.getGenome().charAt(6);
 	      }
 	      else {
-	        
 	        maternalGD = mom.getGenome().charAt(7);
 	      } 
 	    } 
@@ -895,10 +878,10 @@ public class SSCarp {
 		       */
 		  	  double d = Math.random();
 		      if (d < 0.5D) {	        
-			      maternalGD = mom.getGenome().charAt(6);
+			      paternalGD = dad.getGenome().charAt(6);
 		      }
 		      else {	        
-			      maternalGD = mom.getGenome().charAt(7);
+			      paternalGD = dad.getGenome().charAt(7);
 			  } 
 	      }
 	    
