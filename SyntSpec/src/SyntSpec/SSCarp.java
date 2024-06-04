@@ -906,14 +906,14 @@ public class SSCarp {
 	    	// get probability W remains an W
 	    	double rand = Math.random();
 	    	if (rand < SimConfigs.maternalCarryoverFrequency) {
-	    		maternalGD = 'M';
+	    		maternalGD = 'G';
 		    }
 	    }
 	    if (paternalGD == 'W' && mom.getGenome().contains("G")) {
 	    	// get probability W remains an W
 	    	double rand = Math.random();
 	    	if (rand < SimConfigs.maternalCarryoverFrequency) {
-	    		paternalGD = 'M';
+	    		paternalGD = 'G';
 		    }
 	    }
 	    
