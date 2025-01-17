@@ -6,8 +6,6 @@
 /*     */ {
 /*   7 */   public static int WORKER_THREAD_COUNT = 24;
 /*     */   
-/*     */   public static final boolean useWrapper = true;
-/*     */   
 /*     */   public static final boolean multipleLogs = true;
 /*     */   public static final boolean outputPostSimulationData = false;
 /*     */   public static final int filterSeining = 1;
