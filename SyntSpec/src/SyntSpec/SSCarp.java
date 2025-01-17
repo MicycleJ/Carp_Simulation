@@ -1592,7 +1592,7 @@ public class SSCarp {
         }
       } 
       
-      thisRun2.println("Year," + year + ",Lake," + (SSLakeData.lakes[lake]).lakeName + ",BioMass," + (FishMass / (SSLakeData.lakes[lake]).lakeArea) + ",winterkill, " + (SSLakeData.lakes[lake]).isWinterKilled);
+      thisRun2.println("Run," + currentRun + ",Year," + year + ",Lake," + (SSLakeData.lakes[lake]).lakeName + ",BioMass," + (FishMass / (SSLakeData.lakes[lake]).lakeArea) + ",winterkill, " + (SSLakeData.lakes[lake]).isWinterKilled);
     } 
   }
   
@@ -1611,7 +1611,7 @@ public class SSCarp {
           }
         }
       } 
-      thisRun1.println("Year," + year + ",Lake," + (SSLakeData.lakes[lake]).lakeName + ",Number," + FishCount + " ,density, " + SSLakeData.carpDensity[lake]);
+      thisRun1.println("Run," + currentRun + ",Year," + year + ",Lake," + (SSLakeData.lakes[lake]).lakeName + ",Number," + FishCount + " ,density, " + SSLakeData.carpDensity[lake]);
     } 
   }
   
