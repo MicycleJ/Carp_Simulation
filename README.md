@@ -37,7 +37,7 @@ To run the program, simply open a command-line terminal and navigate to the dire
 
 The program will look for a file named ```config.txt```. If no such file is provided, the program will automatically generate one as an example. Any parameter not specified will default to the values shown in the file ```config_allPossible.txt```. 
 
-All parameters for the simulation are specified in config.txt. This includes the initial number of fish, the wildtype genotype, the number, frequency, and makeup of restocks, and all possible values. These can be seen in the file ```config_allPossible.txt```. To run multiple simulations, use ```SIMULATION_RUNS```. To vary a numerical parameter over multiple runs, you can use the following notation: ```VARIABLE_NAME: START_VALUE to STOP_VALUE step STEP```. For example, to simulate different starting populations sizes (such as 50, 100, 150, and 200), you can use the following: ```INITIAL_FISH: 50 to 201 step 50```. The program will then run multiple simulations with INITIAL_FISH set to 50, 100, 150, and 200.
+All parameters for the simulation are specified in config.txt. This includes the initial number of fish, the wildtype genotype, the number, frequency, and makeup of restocks, and all possible values. These can be seen in the file ```config_allPossible.txt```. To run multiple simulations, use ```SIMULATION_RUNS```. To vary a numerical parameter over multiple runs, you can use the following notation: ```VARIABLE_NAME: START_VALUE to STOP_VALUE step STEP```. For example, to simulate different starting populations sizes (such as 50, 100, 150, and 200), you can use the following: ```INITIAL_FISH: 50 to 201 step 50```. The program will then run multiple simulations with INITIAL_FISH set to 50, 100, 150, and 200. That said, it may be easier to run the simulation multiple times with different parameters and associated file names. Included in the "req_files" folder is a bash file, ```simulateCarp.sh```, that shows an example of how we ran the simulation multiple times, while varying parameters, on SLURM.
 
 The simulation currently simulates two lakes, one called "Susan" and one called "Marsh". The relationship between these two lakes in the simulation is not currently understood. Currently, all fish released and counted in the simulation exist in Lake Susan.
 
@@ -53,7 +53,6 @@ _Gene_Generation.txt | For each year, the number of females and males of each ag
 
 
 *Mass of each fish is calculated as follows: $6 \cdot {fish\_length}^{2.763} \cdot 10^{-8} $
-
 
 
 
