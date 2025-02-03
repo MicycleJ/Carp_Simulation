@@ -1,3 +1,0 @@
-INITIAL_FISH: 50 to 201 step 50
-RESTOCK_AMOUNT: [10 100]
-RESTOCK_GENOTYPE: [GR ppttll oldsettings]

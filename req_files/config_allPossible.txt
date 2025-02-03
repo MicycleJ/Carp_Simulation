@@ -1,0 +1,58 @@
+
+WORKER_THREAD_COUNT: [24] -integer used for multithreading the simulations
+FILE_INFO: [file_name] -an optional label for output files
+INITIAL_FISH_GENE_GENERATION: [-1] -a parameter used for generation-dependent death, explained in tutorial
+INITIAL_FISH: [10] -number of initial fish
+INITIAL_GENOTYPE: [gt] -genotype of initial fish
+INITIAL_MALE_PERCENT: [0.5] -what percent of the initial release are males. 0.5 = 50%
+INITIAL_FISH_MIN_AGE: [5] -minimum age of released fish. fish reach reproductive maturity at age 3
+INITIAL_FISH_MAX_AGE: [15] -maximum age of released fish
+
+MAX_FISH_AGE: [70] -maximum age a fish can be. Above this, fish automatically die
+
+RESTOCK_FREQUENCY: [1] -how often restocks occur. 1 is every year, 2 is every other year
+RESTOCK_TIME: [Integer.MAX_VALUE] -maximum time, after which no more restocks occur. If no restocks desired, set to -1
+
+RESTOCK_TIME_ONE: [-1] -optional additional restock times available, for doing irregular releases as opposed to regular releases (done above)
+RESTOCK_TIME_TWO: [-1] -as above. -1 for no restock
+RESTOCK_TIME_THREE: [-1] -as above
+RESTOCK_TIME_FOUR: [-1] -as above
+
+RESTOCK_GENOTYPE: [gt] -genotype of restocked fish
+RESTOCK_AMOUNT: [100] -number of individuals to add during a restock
+RESTOCK_GENE_GENERATION: [-1] -a parameter used in generation-dependent death
+RESTOCK_FISH_AGE: [3] -age of restocked fish
+RESTOCK_MALE_PERCENT: [0.5] -what percent of the initial release are males. 0.5 = 50%
+
+RESTOCK_GENOTYPE_GROUP2: [gt] -genotype of a second group of restocked fish, for doing mixed restock releases
+RESTOCK_AMOUNT_GROUP2: [0] -number of individuals of the second group to add during restock
+RESTOCK_GENE_GENERATION_GROUP2: [0] -a parameter used in generation-dependent death
+RESTOCK_FISH_AGE_GROUP2: [3] -age of restocked fish
+RESTOCK_MALE_PERCENT_GROUP2: [0.5] -what percent of the initial release are males
+
+RESTOCK_GENOTYPE_GROUP3: [gt] -genotype of a third group of restocked fish for release
+RESTOCK_AMOUNT_GROUP3: [0] -as above
+RESTOCK_GENE_GENERATION_GROUP3: [0] -as above
+RESTOCK_FISH_AGE_GROUP3: [3] -as above
+RESTOCK_MALE_PERCENT_GROUP3: [0.5] -as above
+
+RELATIVE_FITNESS: [1.0] -fitness of any non-wildtype fish compared to a wildtype fish. 1.0 = 100%, equivalent fitness
+
+GENE_GENERATION_DEATH: [5] -a parameter used in generation-dependent death
+
+SIMULATION_DURATION: [2] -endpoint year of the simulation
+SIMULATION_RUNS: [1] -number of runs/repeats of the given configuration
+MALE_OFFSPRING_PROBABILITY: [0.5] -percent chance of producing a male offspring, defaults to 0.5 (50%)
+
+PromoterMutationFrequency: [0.05] -percent chance that, for SS reproduction, the promoter mutates from p to P, and becomes non-functioning TODO: CHECK THIS??
+PTAMutationFrequency: [0.05] -percent chance that, for SS reproduction, the T mutates to t, and becomes non-functional TODO
+FLMutationFrequency: [0.05] -percent chance that, for SS reproduction, the L mutates to l, and becomes non-functional TODO
+
+homingFrequency: [0.05] -how often the gene drive element G correctly cuts its target site
+NHEJfrequency: [0.05] -how often the gene drive element's cut site is repaired by NHEJ
+editingFrequency: [1.0] -how often the allele sail creates the desired edit
+maternalCarryoverFrequency: [1.0] -how often the mother's editing allele (G or S) edits the offspring
+
+SeiningOccurProbability: [0.0] -probability that seining occurs in the main lake in a given year
+SeiningRemovePercent: [0.25] -percent of fish that are removed from the lake when seining occurs
+fishAgeLengthFile: [50yfishDataSeining25.csv] -name of a file that contains relationships between fish age and fish length, formatted as "ID,Fish_[id],age,[integer age in years],length,[length]"
