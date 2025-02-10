@@ -23,6 +23,7 @@
 /*    */   public String lakeName;
 /*    */   public double lakeArea;
 /*    */   
+/*	  */   //TODO make winterProb an input parameter / simconfig
 /*    */   public SSLake(String name, double winterProb, double area) {
 /* 27 */     this.lakeName = name;
 /* 28 */     this.winterKillProbabilty = winterProb;

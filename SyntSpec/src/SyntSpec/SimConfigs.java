@@ -6,13 +6,10 @@
 /*     */ {
 /*   7 */   public static int WORKER_THREAD_COUNT = 24;
 /*     */   
-/*     */   public static final boolean multipleLogs = true;
-/*     */   public static final boolean outputPostSimulationData = false;
-/*     */   public static final int filterSeining = 1;
 /* mike*/   public static String FILE_INFO = "";
 /*  14 */   public static int INITIAL_FISH_GENE_GENERATION = -1;
 /*  15 */   public static int INITIAL_FISH = 10;
-/*  16 */   public static String INITIAL_GENOTYPE = "";
+/*  16 */   public static String INITIAL_GENOTYPE = "WW";
 /*  17 */   public static double INITIAL_MALE_PERCENT = 0.5D;
 /*  18 */   public static int INITIAL_FISH_MIN_AGE = 5;
 /*  19 */   public static int INITIAL_FISH_MAX_AGE = 15;
@@ -49,11 +46,7 @@
 /*     */   
 /*  51 */   public static int GENE_GENERATION_DEATH = 5;
 /*     */ 
-/*     */   
-/*  54 */   public static int MAX_ALLELE = 8;
-/*     */ 
-/*     */   
-/*  57 */   public static int SIMULATION_DURATION = 2;
+/*  57 */   public static int SIMULATION_DURATION = 4;
 /*  58 */   public static int SIMULATION_RUNS = 1;
 /*  59 */   public static double MALE_OFFSPRING_PROBABILITY = 0.5D;
 /*     */   

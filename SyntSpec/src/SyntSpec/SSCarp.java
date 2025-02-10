@@ -13,6 +13,10 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+/**
+ * SSCarp is the class containing methods that run the simulation
+ * and write the data out
+ */
 public class SSCarp {
   static String config = "None";
   static String fileInfo = SimConfigs.FILE_INFO;
@@ -32,6 +36,13 @@ public class SSCarp {
   public static final String FEMALE = "female";
   public static Map<Integer, ArrayList<Double>> age2lengthMap;
   
+  /**
+   * Sets up writer objects for outputs and calls runSimulation
+   * in a loop
+   * @param args 	the number of simulation runs and the number
+   * 				of years to run the simulation for, and other 
+   * 				parameters as a list of strings
+   */
   public static void mainOld(String[] args) {
     System.out.println(Runtime.getRuntime().maxMemory());
     
@@ -77,6 +88,9 @@ public class SSCarp {
     thisRun3.close();
   }
   
+  /**
+   * runs a the simulation, takes all parameters from SimConfigs
+   */
   public static void runSimulation() {
     fishes.clear();
     ArrayList<SSCarps> babyFish = new ArrayList<>();
@@ -149,13 +163,22 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * moves a fish back to its "dispersal" lake
+   * @deprecated unused
+   */
   public static void simulateFishReturn() {
-    for (SSCarps current : fishes)
-    {
-      current.tryReturn();
-    }
-  }
+	    for (SSCarps current : fishes)
+	    {
+	      current.tryReturn();
+	    }
+	  }
   
+  /**
+   * for a fish of a given age, generate a reasonable length
+   * @param age		age of a fish in years
+   * @return 		a length double in millimeters
+   */
   public static double age2length(int age) {
     if (age2lengthMap != null && age2lengthMap.get(Integer.valueOf(age)) != null) {
       
@@ -207,6 +230,18 @@ public class SSCarp {
     return 550.0D;
   }
   
+  /**
+   * adds a number of fish of a specified genome to the lake
+   * @param amount			number of fish to add
+   * @param probMale		the proportion of added fish that will be male
+   * @param age				age of the stocked fish
+   * @param length			length of the stocked fish
+   * @param newLocation		which lake to add the fish to
+   * @param bornLake		lake the fish were born in
+   * @param dispersal		which lake the fish disperse to
+   * @param genome			genotype of the fish as a string
+   * @param gen				generation number of the fish
+   */
   public static void restock(int amount, double probMale, int age, double length, SSLake newLocation, SSLake bornLake, SSLake dispersal, String genome, int gen) {
     boolean ss = false;
     String cname = "SyntSpec.";
@@ -257,6 +292,22 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * given a fish type, uses the class constructor to create the specified fish
+   * and adds it to the fish population
+   * 
+   * @param type			class name for the fish
+   * @param name			a fish name/id for the fish
+   * @param age				age of the fish in years
+   * @param length			length of the fish in mm
+   * @param newLocation		which lake the fish will be in
+   * @param bornLake		lake the fish was born in
+   * @param dispersal		which lake the fish disperses to
+   * @param ss				<code>true</code> if fish is sterile
+   * @param gender			gender of the fish
+   * @param genome			genotype of the fish as a string
+   * @param gen				generation number of the fish
+   */
   public static void makeFish(String type, String name, int age, double length, SSLake newLocation, SSLake bornLake, SSLake dispersal, boolean ss, String gender, String genome, int gen) {
     try {
       Class<?> clazz = Class.forName(type);
@@ -270,6 +321,11 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * adds a number of SSCarps class fish
+   * @param amount		number of fish to add
+   * @deprecated unused
+   */
   public static void addSSFish(int amount) {
     for (int i = 0; i < amount; i++)
     {
@@ -278,6 +334,11 @@ public class SSCarp {
     }
   }
   
+  /**
+   * add a number of SSFLCarps fish, with genotype <code>RESTOCK_GENOTYPE</code>
+   * @param amount		number of fish to add
+   * @deprecated unused
+   */
   public static void addSSFLFish(int amount) {
     for (int i = 0; i < amount; i++) {
       
@@ -294,6 +355,11 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * adds a number of GDCarps fish, with genotype <code>RESTOCK_GENOTYPE</code>
+   * @param amount		number of fish to add
+   * @deprecated unused
+   */
   public static void addGDFish(int amount) {
     for (int i = 0; i < amount; i++) {
       
@@ -310,6 +376,11 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * adds a number of FLCarps fish, with genotype <code>RESTOCK_GENOTYPE</code>
+   * @param amount		number of fish to add
+   * @deprecated unused
+   */
   public static void addFLFish(int amount) {
     for (int i = 0; i < amount; i++)
     {
@@ -318,6 +389,10 @@ public class SSCarp {
     }
   }
   
+  /**
+   * moves a fish to a random lake
+   * @deprecated unused
+   */
   public static void simulateDispersal() {
     for (SSCarps current : fishes)
     {
@@ -325,10 +400,15 @@ public class SSCarp {
     }
   }
   
+  /**
+   * kills a subset of fish based on fish length, age, and lake density.
+   * Dead fish are added to the <code>deadFish</code> list
+   * @param deadFish	a list of already dead fish (may be empty)
+   */
   public static void simulateDeath(ArrayList<SSCarps> deadFish) {
     double Linf = 712.0D;
     
-    boolean isAlive = true;
+    // boolean isAlive = true;
     
     for (SSCarps current : fishes) {
       
@@ -339,13 +419,17 @@ public class SSCarp {
       
       if (mort < percentmortality || current.age > SimConfigs.MAX_FISH_AGE) {
         
-        isAlive = false;
+        // isAlive = false;
         
         deadFish.add(current);
       } 
     } 
   }
   
+  /**
+   * randomly kills a percent of fish
+   * @param deadFish	a list of already dead fish (may be empty)
+   */
   public static void simulateWinterSeining(ArrayList<SSCarps> deadFish) {
     for (SSCarps current : fishes) {
       
@@ -369,12 +453,24 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * checks if a fish is sein-able. Currently, <b>all fish are always sein-able</b>
+   * @param f	fish to be checked
+   * @return	<code>false</code> always
+   */
+  // TODO integrate this into simulation
   public static boolean seiningFishToStayInLake(SSCarps f) {
     boolean toKeep = false;
     
     return toKeep;
   }
   
+  /**
+   * kill fish at random during the winter months. <b>Not currently used<\b>
+   * @param deadFish	list of already dead fish (may be empty)
+   * @deprecated unused
+   */
+  // TODO: integrate this into simulation
   public static void simulateWinterkill(ArrayList<SSCarps> deadFish) {
     for (int z = 0; z < SSLakeData.lakes.length; z++) {
       
@@ -399,20 +495,10 @@ public class SSCarp {
     } 
   }
   
-  public static void ACBarrier() {
-    double rand = Math.random();
-    double ACON = 0.99D;
-    
-    if (rand < ACON) {
-      
-      boolean AC = true;
-    }
-    else {
-      
-      boolean AC = false;
-    } 
-  }
-  
+  /**
+   * move fish around lakes
+   * @deprecated unused
+   */
   public static void simulateFishMovement() {
     for (SSCarps current : fishes) {
       
@@ -423,6 +509,14 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * splits males into wildtype and synthetic males. Then, gets a number of
+   * potential surviving offspring from each female. Potential offspring are
+   * aggregated and assigned a father, based on wildtype vs. synthetic fitness.
+   * Finally, actual offspring fish are created using <code>makeBaby</code> and
+   * added to <code>babyFish</code>
+   * @param babyFish	empty array, will hold all baby fish
+   */
   public static void simulateFishReproduction(ArrayList<SSCarps> babyFish) {
     stopWatch("start reproduction");
     ArrayList<SSCarps> maleAdultsWild = new ArrayList<>(fishes.size());
@@ -530,7 +624,18 @@ public class SSCarp {
       while (!executor.isTerminated());
     } 
   }
-/*      */
+
+  /**
+   * create a baby, using parent genotypes to call correct reproduction rules
+   * @param i					the index of the mother, father, and baby lists 
+   * 							to look at (to pull a specific combination of
+   * 							an already assigned mother/father/baby)
+   * @param potentialBabyFish	list of potential babyfish, of which we will use one
+   * @param mothers				list of potential mothers, of which we will use one
+   * @param fathers				list of potential fathers, of which we will use one
+   * @return            		a fish with the correct baby genotype, or <code>null</code> if
+   * 							no baby is produced from the mating
+   */
   public static SSCarps makeBaby(int i, ArrayList<SSCarps> potentialBabyFish, ArrayList<SSCarps> mothers, ArrayList<SSCarps> fathers) {
     SSCarps currentBaby = potentialBabyFish.get(i);
     SSCarps currentMom = mothers.get(i);
@@ -638,6 +743,13 @@ public class SSCarp {
     return potentialBabyFish.get(i);
   }
   
+  /**
+   * determine the reproduction type when both mom and dad are SSGenomeCarps
+   * @param mom		SSGenomeCarps mom object
+   * @param dad		SSGenomeCarps dad object
+   * @return		a string, to be parsed for reproduction. Options include
+   * 				"Trojan", "AlleleSailMC", "GeneDriveSexSkew", and "FLExtended"
+   */
   public static String getReproduceType(SSGenomeCarps mom, SSGenomeCarps dad) {
     if (mom.getGenome().toUpperCase().contains("TROJANS") || dad.getGenome().toUpperCase().contains("TROJANS"))
     {
@@ -654,6 +766,16 @@ public class SSCarp {
     return "FLExtended";
   }
   
+  /**
+   * create a baby when either the mother or the father carries an allele sail,
+   * and maternal carryover of editing is permitted. Learn more about the behavior 
+   * in <code>README.md</code>
+   * @param mom		an SSGenomeCarps mom object
+   * @param dad		an SSGenomeCarps dad object
+   * @param baby	a potential baby to be returned
+   * @return		baby if offspring viable, <code>null</code> if the
+   * 				baby's generation is >= <code>GENE_GENERATION_DEATH</code>
+   */
   public static SSGenomeCarps reproduceMaternalCarryoverAS(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
 	  int nextgen = Math.max(mom.generation, dad.generation);
 	  // generation information
@@ -767,6 +889,16 @@ public class SSCarp {
 	  return baby;
   }
   
+  /**
+   * create a baby when either parent has a gene drive element that causes 
+   * sex skew. Maternal carryover of homing is permitted. Learn more about the
+   * behavior in <code>README.md</code> 
+   * @param mom		an SSGenomeCarps mom object
+   * @param dad		an SSGenomeCarps dad object
+   * @param baby	a potential baby to be returned
+   * @return		baby if offspring viable, <code>null</code> if the
+   * 				baby's generation is >= <code>GENE_GENERATION_DEATH</code>
+   */
   public static SSGenomeCarps reproduceGDMCSS(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
 	  int nextgen = Math.max(mom.generation, dad.generation);
 	  // generation information
@@ -921,7 +1053,7 @@ public class SSCarp {
 	    baby.setGenome(childGenotypeGD);
 	    
 	    // add in a sex skew ! GG = male
-	    if (childGenotypeGD.contains("W")) {
+	    if (childGenotypeGD.contains("W") || childGenotypeGD.contains("R")) {
 		    double rand = Math.random();
 		    if (rand < 0.5D) {
 		      baby.gender = "male";
@@ -936,6 +1068,15 @@ public class SSCarp {
 		  return baby;
   }
   
+  /**
+   * create a baby when either parent genotype contains "TROJANS", which causes 
+   * all-male offspring. Learn more about the behavior in <code>README.md</code> 
+   * @param mom		an SSGenomeCarps mom object
+   * @param dad		an SSGenomeCarps dad object
+   * @param baby	a potential baby to be returned
+   * @return		baby if offspring viable, <code>null</code> if the
+   * 				baby's generation is >= <code>GENE_GENERATION_DEATH</code>
+   */
   public static SSGenomeCarps reproduceTrojan(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
     String moms = "N";
     String dads = "N";
@@ -1008,6 +1149,16 @@ public class SSCarp {
     return baby;
   }
   
+  /**
+   * create a baby when TODO either parent has a gene drive element that causes 
+   * sex skew. Maternal carryover of homing is permitted. Learn more about the
+   * behavior in <code>README.md</code> 
+   * @param mom		an SSGenomeCarps mom object
+   * @param dad		an SSGenomeCarps dad object
+   * @param baby	a potential baby to be returned
+   * @return		baby if offspring viable, <code>null</code> if the
+   * 				baby's generation is >= <code>GENE_GENERATION_DEATH</code>
+   */
   public static SSGenomeCarps reproduceGeneral(SSGenomeCarps mom, SSGenomeCarps dad, SSGenomeCarps baby) {
     String babyGenome = "";
     String momGenome = mom.getGenome();
@@ -1028,8 +1179,11 @@ public class SSCarp {
       baby.generation = nextgen;
     } 
     
+    System.out.println(baby.generation);
+    
     if (baby.generation >= SimConfigs.GENE_GENERATION_DEATH)
     {
+      System.out.println("NULL BABY RETURNED, GENE GEN DEATH");
       return null;
     }
     
@@ -1267,6 +1421,7 @@ public class SSCarp {
   
   public static GDCarps reproduceGD(GDCarps mom, GDCarps dad, GDCarps baby) {
     int nextgen = Math.max(mom.generation, dad.generation);
+    
     if (nextgen >= 0) {
       
       baby.generation = nextgen + 1;

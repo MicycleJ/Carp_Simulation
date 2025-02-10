@@ -3,6 +3,8 @@
 /*     */ {
 /*  13 */   static double[] carpDensity = new double[2];
 /*  14 */   static double[] adultCarpDensity = new double[2];
+			// TODO take in winterprob from simconfigs, don't default to 0.0
+			// TODO make lake area also configurable
 /*  15 */   static SSLake[] lakes = new SSLake[] { new SSLake("Marsh", 0.0D, 100.0D), new SSLake("Susan", 0.0D, 100.0D) };
 /*     */   
 /*     */   public static void countDensity() {
