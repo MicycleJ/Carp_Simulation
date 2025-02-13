@@ -12,7 +12,7 @@ public class GDCarps
   
   /**
    * GDCarps constructor, genotype defaults to "WW"
-   * @param @param newName			string identifier
+   * @param newName			string identifier
    * @param newAge			integer age in years
    * @param newLocation		lake object where the fish lives
    * @param ss				<code>TRUE</code> if the fish is sterile, else <code>FALSE</code>

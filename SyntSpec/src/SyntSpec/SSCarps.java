@@ -163,7 +163,7 @@ public class SSCarps
    * longer than 360cm are guaranteed to be mature, fish under 330cm
    * are guaranteed to be immature, and in between these values there
    * is an intermediate probability of maturity.
-   * @return	if a random double < reproductive function
+   * @return	if a random double \< reproductive function
    */
   public boolean isMature() {
     double reproductive = 1.0D / (1.0D + Math.exp(-1.0D * (-199.517D + 0.5796D * this.length)));

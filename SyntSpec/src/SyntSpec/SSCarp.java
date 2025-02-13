@@ -466,9 +466,9 @@ public class SSCarp {
   }
   
   /**
-   * kill fish at random during the winter months. <b>Not currently used<\b>
+   * kill fish at random during the winter months. CURRENTLY UNUSED
    * @param deadFish	list of already dead fish (may be empty)
-   * @deprecated unused
+   * @deprecated 		unused
    */
   // TODO: integrate this into simulation
   public static void simulateWinterkill(ArrayList<SSCarps> deadFish) {
