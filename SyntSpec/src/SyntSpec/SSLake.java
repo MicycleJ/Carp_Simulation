@@ -1,73 +1,69 @@
-/*    */ package SyntSpec;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ public class SSLake
-/*    */ {
-/*    */   public double winterKillProbabilty;
-/*    */   public boolean isWinterKilled = false;
-/*    */   public boolean isSeining = false;
-/*    */   public String lakeName;
-/*    */   public double lakeArea;
-/*    */   
-/*	  */   //TODO make winterProb an input parameter / simconfig
-/*    */   public SSLake(String name, double winterProb, double area) {
-/* 27 */     this.lakeName = name;
-/* 28 */     this.winterKillProbabilty = winterProb;
-/* 29 */     this.lakeArea = area;
-/*    */   }
-/*    */ 
-/*    */ 
-/*    */   
-/*    */   public void trySeining() {
-/* 35 */     double rand = Math.random();
-/*    */     
-/* 37 */     if (rand < SimConfigs.SeiningOccurProbability) {
-/*    */       
-/* 39 */       this.isSeining = true;
-/*    */     }
-/*    */     else {
-/*    */       
-/* 43 */       this.isSeining = false;
-/*    */     } 
-/*    */   }
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */   
-/*    */   public void tryWinterkill() {
-/* 52 */     double rand = Math.random();
-/*    */     
-/* 54 */     if (rand < this.winterKillProbabilty) {
-/*    */       
-/* 56 */       this.isWinterKilled = true;
-/*    */     }
-/*    */     else {
-/*    */       
-/* 60 */       this.isWinterKilled = false;
-/*    */     } 
-/*    */   }
-/*    */ 
-/*    */ 
-/*    */   
-/*    */   public String toString() {
-/* 67 */     return this.lakeName;
-/*    */   }
-/*    */ }
+package SyntSpec;
+
+/**
+ * SSLake objects represent a lake, its area, and other parameters concerning it
+ */
+public class SSLake
+{
+  public double winterKillProbabilty;
+  public boolean isWinterKilled = false;
+  public boolean isSeining = false;
+  public String lakeName;
+  public double lakeArea;
+  
+  /**
+   * SSLake constructor, takes in a name for the lake, the probability
+   * that the winter will lead to fish death, and its area in hectares
+   * @param name			string name for the lake
+   * @param winterProb		probability that fish will die off during the winter
+   * @param area			double, in hectares
+   */
+  public SSLake(String name, double winterProb, double area) {
+	//TODO make winterProb an input parameter / simconfig
+    this.lakeName = name;
+    this.winterKillProbabilty = winterProb;
+    this.lakeArea = area;
+  }
+
+  /**
+   * Attempt seining, based on parameter "SeiningOccurProbability"
+   */
+  public void trySeining() {
+    double rand = Math.random();
+    
+    if (rand < SimConfigs.SeiningOccurProbability) {
+      
+      this.isSeining = true;
+    }
+    else {
+      
+      this.isSeining = false;
+    } 
+  }
+
+  /**
+   * Attempt killing off fish during the winter
+   */
+  public void tryWinterkill() {
+    double rand = Math.random();
+    
+    if (rand < this.winterKillProbabilty) {
+      
+      this.isWinterKilled = true;
+    }
+    else {
+      
+      this.isWinterKilled = false;
+    } 
+  }
+
+  /**
+   * Return the name of the lake
+   */
+  public String toString() {
+    return this.lakeName;
+  }
+}
 
 
 /* Location:              C:\Users\mljoh\Downloads\Default Model (Smanski Carp)\SyntSpec.jar!\SyntSpec\SSLake.class

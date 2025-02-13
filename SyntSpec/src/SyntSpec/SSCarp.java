@@ -612,6 +612,7 @@ public class SSCarp {
     }
     else {
       int step = maximumPossibleBabies / SimConfigs.WORKER_THREAD_COUNT;
+      // TODO check logic
       int start = 0;
       ExecutorService executor = Executors.newFixedThreadPool(SimConfigs.WORKER_THREAD_COUNT);
       while (start < maximumPossibleBabies) {
@@ -1070,7 +1071,8 @@ public class SSCarp {
   
   /**
    * create a baby when either parent genotype contains "TROJANS", which causes 
-   * all-male offspring. Learn more about the behavior in <code>README.md</code> 
+   * all-male offspring. Learn more about the behavior in <code>README.md</code>,
+   * under the "YY Trojan"
    * @param mom		an SSGenomeCarps mom object
    * @param dad		an SSGenomeCarps dad object
    * @param baby	a potential baby to be returned
@@ -1150,9 +1152,8 @@ public class SSCarp {
   }
   
   /**
-   * create a baby when TODO either parent has a gene drive element that causes 
-   * sex skew. Maternal carryover of homing is permitted. Learn more about the
-   * behavior in <code>README.md</code> 
+   * create a baby when neither parent has special behaviors. All alleles have
+   * equal probability of being inherited
    * @param mom		an SSGenomeCarps mom object
    * @param dad		an SSGenomeCarps dad object
    * @param baby	a potential baby to be returned
@@ -1255,6 +1256,19 @@ public class SSCarp {
     return null;
   }
   
+  /**
+   * create a baby when either parent is SSFL, or has a genome of length six.
+   * If offspring carry a "p" and a "T", they are nonviable. If the offspring 
+   * is female and carries an "L", they are also nonviable. Learn more about 
+   * the behavior in <code>README.md</code>, under "Self-Stocking Incompatible 
+   * Male System (SSIMS)"
+   * @param mom		an SSGenomeCarps mom object
+   * @param dad		an SSGenomeCarps dad object
+   * @param baby	a potential baby to be returned
+   * @return		baby if offspring viable, <code>null</code> if the
+   * 				baby's generation is >= <code>GENE_GENERATION_DEATH</code>
+   * 				or otherwise nonviable.
+   */
   public static SSFLCarps reproduceSSFL(SSFLCarps mom, SSFLCarps dad, SSFLCarps baby) {
     char paternalT;
     int nextgen = Math.max(mom.generation, dad.generation);
@@ -1419,6 +1433,18 @@ public class SSCarp {
     return null;
   }
   
+  /**
+   * create a baby when either parent is a GDCarp (has a genome of length two).
+   * Individuals that are "GW" have a chance of converting the "W" into another
+   * allele. Offspring that are GG, GL, or LL will be nonviable. Learn more about 
+   * the behavior in <code>README.md</code>, section "Synthetic Gene Drive (SGD)"
+   * @param mom		an SSGenomeCarps mom object
+   * @param dad		an SSGenomeCarps dad object
+   * @param baby	a potential baby to be returned
+   * @return		baby if offspring viable, <code>null</code> if the
+   * 				baby's generation is >= <code>GENE_GENERATION_DEATH</code>
+   * 				or otherwise nonviable.
+   */
   public static GDCarps reproduceGD(GDCarps mom, GDCarps dad, GDCarps baby) {
     int nextgen = Math.max(mom.generation, dad.generation);
     
@@ -1578,7 +1604,19 @@ public class SSCarp {
     
     return null;
   }
-  // Michelle starts editing here
+  
+  /**
+   * create a baby when either of the parents is an ASCarp (has a genome of
+   * length 5). Offspring without an "F" allele are always male. Learn more 
+   * about the behavior in <code>README.md</code>, section "Masculinizing 
+   * Allele Sail"
+   * @param mom		an SSGenomeCarps mom object
+   * @param dad		an SSGenomeCarps dad object
+   * @param baby	a potential baby to be returned
+   * @return		baby if offspring viable, <code>null</code> if the
+   * 				baby's generation is >= <code>GENE_GENERATION_DEATH</code>
+   * 				or otherwise nonviable.
+   */
   public static ASCarps reproduceAS(ASCarps mom, ASCarps dad, ASCarps baby) {
 	  int nextgen = Math.max(mom.generation, dad.generation);
 	  if (nextgen >= 0) {
@@ -1673,8 +1711,12 @@ public class SSCarp {
 	  return baby;
 
   }    
-  // Michelle stops editing here
   
+  /**
+   * Take all current living fish, and increase their length depending on
+   * their current age. Length increase is dependent on density if the fish
+   * is 2 or more years old
+   */
   public static void simulateFishGrowth() {
     for (SSCarps current : fishes) {
       
@@ -1706,6 +1748,9 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * Take all current living fish and increase their age by 1
+   */
   public static void simulateFishAging() {
     for (SSCarps current : fishes) {
       
@@ -1716,6 +1761,11 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * Given a file of fish ages and lengths, create an array of possible fish sizes.
+   * Used to generate lengths for stocked fish.
+   * @param fname	filename, usually "50yfishDataSeining25.csv"
+   */
   public static void initilizeAge2LengthMapFromFile(String fname) {
     age2lengthMap = new HashMap<>();
     try {
@@ -1737,6 +1787,10 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * Write the current density (kg/ha) to a file ending in "_Biomass.txt"
+   * @param year	current year
+   */
   public static void writeBiomassData(int year) {
     for (int lake = 0; lake < SSLakeData.lakes.length; lake++) {
       double FishMass = 0.0D;
@@ -1751,6 +1805,10 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * Write the abundance (carp number / ha) to a file ending in "_AdultAbundance.txt"
+   * @param year	current year
+   */
   public static void writeAbundanceData(int year) {
     for (int lake = 0; lake < SSLakeData.lakes.length; lake++) {
       
@@ -1770,6 +1828,11 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * Write the number of males and females, for each age and generation number, to
+   * a file ending in "_Gene_Generation.txt"
+   * @param year	current year
+   */
   public static void writeGeneGeneration(int year) {
     HashMap[] arrayOfHashMap1 = new HashMap[300];
     HashMap[] arrayOfHashMap2 = new HashMap[300];
@@ -1835,6 +1898,11 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * Write the number of males and females, for each age and GENOTYPE, to
+   * a file ending in ".txt". An example of this data is in <code>README.md</code>
+   * @param year	current year
+   */
   public static void writeData(int year) {
     HashMap[] arrayOfHashMap1 = new HashMap[300];
     HashMap[] arrayOfHashMap2 = new HashMap[300];
@@ -1916,6 +1984,12 @@ public class SSCarp {
     } 
   }
   
+  /**
+   * find the factorial
+   * @param n	integer to factorialize
+   * @return	n!
+   * @deprecated unused
+   */
   public static int factorial(int n) {
     int prod = 1;
     for (int i = n; i > 0; i--)
@@ -1926,6 +2000,14 @@ public class SSCarp {
     return prod;
   }
   
+  /**
+   * find n choose k, the number of different possible ways to pick "k" objects
+   * from a set of size "n"
+   * @param n	integer
+   * @param k	integer
+   * @return	value of n choose k
+   * @deprecated unused
+   */
   public static int nChooseK(int n, int k) {
     return factorial(n) / factorial(n - k) * factorial(k);
   }

@@ -1,184 +1,220 @@
-/*     */ package SyntSpec;
-/*     */ import java.io.File;
-/*     */ import java.io.FileNotFoundException;
-/*     */ import java.io.FileOutputStream;
-/*     */ import java.io.PrintWriter;
-/*     */ import java.text.DateFormat;
+package SyntSpec;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-/*     */ import java.util.Date;
-/*     */ import java.util.HashMap;
-/*     */ import java.util.Map;
-/*     */ import java.util.Scanner;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
-
-/*     */ public class Wrapper {
-/*     */   public static Map<String, String> configs;
-/*     */   public static final String valueDelim = " ";
-/*  15 */   public static String timestamp = ""; public static final String pathToFile = "./src/SyntSpec/"; public static final String JavaConfigFileName = "SimConfigs.java";
-/*  16 */   public static int runNumber = 1;
-/*     */   
-/*     */   public static void main(String[] args) {
-/*  20 */     configs = new HashMap<>();
-/*  21 */     File configFile = new File("config.txt");
-/*     */     
-/*  27 */     if (configFile.exists()) {
-/*     */       
-/*  29 */       fillMap(configFile);
-/*     */       
-/*  31 */       runConfigs(configs);
-/*     */     }
-/*     */     else {
-/*     */       
-/*  35 */       System.out.println("Creating sample \"config.txt\" file.  Please modify then run again");
-/*     */       
-/*     */       try {
-/*  38 */         PrintWriter out = new PrintWriter(configFile);
-/*  39 */         out.printf("INITIAL_FISH: 50 to 201 step 50\n", new Object[0]);
-/*  40 */         out.printf("RESTOCK_AMOUNT: [10 100]\n", new Object[0]);
-/*  41 */         out.printf("RESTOCK_GENOTYPE: [GR ppttll oldsettings]\n", new Object[0]);
-/*     */         
-/*  43 */         out.close();
-/*  44 */       } catch (FileNotFoundException e) {
-/*  45 */         System.out.printf("Error creating config files (and nonexistant)\n", new Object[0]);
-/*  46 */         System.exit(1);
-/*     */       } 
-/*     */     } 
-/*     */   }
-/*     */   
-/*     */   public static void runConfigs(Map<String, String> configs) {
-/*  54 */     if (configs.isEmpty()) {
-/*     */       
-/*  56 */       String[] input = new String[0];
-/*     */       
-/*  58 */       DateFormat df = new SimpleDateFormat("dd-MM-yy_HH~mm~ss");
-/*  59 */       Date dateobj = new Date();
-/*  60 */       timestamp = df.format(dateobj) + "_";
-/*  61 */       writeCurrentConfigs();
-/*  62 */       SSCarp.mainOld(input);
-/*  63 */       runNumber++;
-/*     */       
-/*     */       return;
-/*     */     } 
-/*  67 */     String currentConfig = (String)configs.keySet().toArray()[0];
-/*  68 */     String values = configs.get(currentConfig);
-/*  69 */     String[] sp = values.split(" ");
-/*     */     
-/*  74 */     Map<String, String> nc = new HashMap<>(configs);
-/*  75 */     nc.remove(currentConfig);
-/*  76 */     for (String cv : sp) {
-/*     */       
-/*  80 */       SimConfigs x = new SimConfigs();
-/*  81 */       x.changeValue(currentConfig, cv);
-/*     */       
-/*  84 */       runConfigs(nc);
-/*     */     } 
-/*     */   }
-/*     */   
-/*     */   public static void changeFile(String variable, String value) {
-/*  91 */     String wholeFile = "";
-/*     */     try {
-/*  93 */       File jcf = new File("./src/SyntSpec/SimConfigs.java");
-/*  94 */       Scanner in = new Scanner(jcf);
-/*  95 */       while (in.hasNextLine()) {
-/*     */         
-/*  97 */         String line = in.nextLine();
-/*  98 */         if (line.contains(variable)) {
-/*     */           
-/* 100 */           String start = line.substring(0, line.indexOf("=") + 1);
-/*     */           
-/* 102 */           if (-1.0D < Double.parseDouble(value) && Double.parseDouble(value) < 1.0D) {
-/*     */             
-/* 104 */             wholeFile = wholeFile + start + value + ";\n";
-/*     */             
-/*     */             continue;
-/*     */           } 
-/* 108 */           wholeFile = wholeFile + start + Integer.toString((int)Double.parseDouble(value)) + ";\n";
-/*     */           
-/*     */           continue;
-/*     */         } 
-/*     */         
-/* 113 */         wholeFile = wholeFile + line + "\n";
-/*     */       } 
-/*     */       
-/* 117 */       in.close();
-/*     */       
-/* 119 */       PrintWriter out = new PrintWriter(jcf);
-/* 120 */       out.print(wholeFile);
-/* 121 */       out.close();
-/*     */     
-/*     */     }
-/* 124 */     catch (Exception e) {
-/*     */       
-/* 126 */       System.out.printf("Error finding: SimConfigs.java", new Object[0]);
-/* 127 */       e.printStackTrace();
-/* 128 */       System.exit(1);
-/*     */     } 
-/*     */   }
-/*     */   
-/*     */   public static void fillMap(File input) {
-/*     */     try {
-/* 135 */       Scanner in = new Scanner(input);
-/* 136 */       while (in.hasNextLine()) {
-/*     */         
-/* 138 */         String line = in.nextLine();
-/* 139 */         if (line.contains("step")) {
-/*     */           
-/* 141 */           String configWord = line.substring(0, line.indexOf(":"));
-/* 142 */           String rest = line.substring(line.indexOf(":") + 1);
-/* 143 */           String[] sp = rest.trim().split(" ");
-/* 144 */           double start = Double.parseDouble(sp[0]);
-/* 145 */           double end = Double.parseDouble(sp[2]);
-/* 146 */           double step = Double.parseDouble(sp[4]);
-/*     */           
-/* 149 */           String values = ""; double i;
-/* 150 */           for (i = start; i < end; i += step)
-/*     */           {
-/* 152 */             values = values + " " + Double.toString(i);
-/*     */           }
-/*     */           
-/* 156 */           if (values != "")
-/*     */           {
-/* 158 */             configs.put(configWord, values.trim()); } 
-/*     */           continue;
-/*     */         } 
-/* 161 */         if (line.contains("[")) {
-/*     */           
-/* 163 */           String configWord = line.substring(0, line.indexOf(":"));
-/* 164 */           String rest = line.substring(line.indexOf(":") + 1);
-/* 165 */           String values = rest.substring(rest.indexOf("[") + 1, rest.indexOf("]"));
-/*     */           
-/* 168 */           if (values != "")
-/*     */           {
-/* 170 */             configs.put(configWord, values.trim());
-/*     */           }
-/*     */         } 
-/*     */       } 
-/*     */       
-/* 178 */       in.close();
-/* 179 */     } catch (FileNotFoundException e) {
-/*     */       
-/* 181 */       System.out.println("Config file not created?!");
-/* 182 */       System.exit(1);
-/*     */     } 
-/*     */   }
-/*     */   
-/*     */   public static void writeCurrentConfigs() {
-/*     */     try {
-/* 191 */       PrintWriter cf = new PrintWriter(new FileOutputStream(stamp() + SimConfigs.FILE_INFO + "_configs.txt"));
-/* 192 */       SimConfigs sc = new SimConfigs();
-/* 193 */       cf.print(sc);
-/* 194 */       cf.close();
-/*     */     }
-/* 196 */     catch (FileNotFoundException e) {
-/* 197 */       System.out.println("Error logging config settings");
-/* 198 */       System.out.println(e);
-/*     */     } 
-/*     */   }
-/*     */   
-/*     */   public static String stamp() {
-/* 207 */     return timestamp + runNumber + "_";
-/*     */   }
-/*     */ }
+/**
+ * Wrapper is the main class for running. It is used to convert the 
+ * parameters in config.txt into variables, and runs the simulation
+ * in SSCarp.java
+ */
+public class Wrapper {
+  public static Map<String, String> configs;
+  public static final String valueDelim = " ";
+  public static String timestamp = ""; public static final String pathToFile = "./src/SyntSpec/"; public static final String JavaConfigFileName = "SimConfigs.java";
+  public static int runNumber = 1;
+  
+  /**
+   * Call functions to convert config.txt to variables, and to run
+   * the simulation. If no config file exists, a sample one will be
+   * created
+   * @param args
+   */
+  public static void main(String[] args) {
+    configs = new HashMap<>();
+    File configFile = new File("config.txt");
+    
+    if (configFile.exists()) {
+      
+      fillMap(configFile);
+      
+      runConfigs(configs);
+    }
+    else {
+      
+      System.out.println("Creating sample \"config.txt\" file.  Please modify then run again");
+      
+      try {
+        PrintWriter out = new PrintWriter(configFile);
+        out.printf("INITIAL_FISH: 50 to 201 step 50\n", new Object[0]);
+        out.printf("RESTOCK_AMOUNT: [10 100]\n", new Object[0]);
+        out.printf("RESTOCK_GENOTYPE: [GR ppttll oldsettings]\n", new Object[0]);
+        
+        out.close();
+      } catch (FileNotFoundException e) {
+        System.out.printf("Error creating config files (and nonexistant)\n", new Object[0]);
+        System.exit(1);
+      } 
+    } 
+  }
+  
+  /**
+   * recursively call mainOld, to handle parameters being varied
+   * @param configs		HashMap of varied configuration values (?)
+   */
+  public static void runConfigs(Map<String, String> configs) {
+    if (configs.isEmpty()) {
+      
+      String[] input = new String[0];
+      
+      DateFormat df = new SimpleDateFormat("dd-MM-yy_HH~mm~ss");
+      Date dateobj = new Date();
+      timestamp = df.format(dateobj) + "_";
+      writeCurrentConfigs();
+      SSCarp.mainOld(input);
+      runNumber++;
+      
+      return;
+    } 
+    String currentConfig = (String)configs.keySet().toArray()[0];
+    String values = configs.get(currentConfig);
+    String[] sp = values.split(" ");
+    
+    Map<String, String> nc = new HashMap<>(configs);
+    nc.remove(currentConfig);
+    for (String cv : sp) {
+      
+      SimConfigs x = new SimConfigs();
+      x.changeValue(currentConfig, cv);
+      
+      runConfigs(nc);
+    } 
+  }
+  
+  /**
+   * Change the original SimConfigs.java file to have the given
+   * value for the given variable
+   * @param variable	name of a parameter in SimConfigs.java
+   * @param value		new parameter value
+   * @deprecated 		unused
+   */
+  public static void changeFile(String variable, String value) {
+    String wholeFile = "";
+    try {
+      File jcf = new File("./src/SyntSpec/SimConfigs.java");
+      Scanner in = new Scanner(jcf);
+      while (in.hasNextLine()) {
+        
+        String line = in.nextLine();
+        if (line.contains(variable)) {
+          
+          String start = line.substring(0, line.indexOf("=") + 1);
+          
+          if (-1.0D < Double.parseDouble(value) && Double.parseDouble(value) < 1.0D) {
+            
+            wholeFile = wholeFile + start + value + ";\n";
+            
+            continue;
+          } 
+          wholeFile = wholeFile + start + Integer.toString((int)Double.parseDouble(value)) + ";\n";
+          
+          continue;
+        } 
+        
+        wholeFile = wholeFile + line + "\n";
+      } 
+      
+      in.close();
+      
+      PrintWriter out = new PrintWriter(jcf);
+      out.print(wholeFile);
+      out.close();
+    
+    }
+    catch (Exception e) {
+      
+      System.out.printf("Error finding: SimConfigs.java", new Object[0]);
+      e.printStackTrace();
+      System.exit(1);
+    } 
+  }
+  
+  /**
+   * Given the name of the config file, read through each
+   * line and add the variables to the configs HashMap. 
+   * Each line in the config file must have either "step"
+   * or a single parameter in brackets [ ]
+   * @param input		name of file, always "config.txt"
+   */
+  public static void fillMap(File input) {
+    try {
+      Scanner in = new Scanner(input);
+      while (in.hasNextLine()) {
+        
+        String line = in.nextLine();
+        if (line.contains("step")) {
+          
+          String configWord = line.substring(0, line.indexOf(":"));
+          String rest = line.substring(line.indexOf(":") + 1);
+          String[] sp = rest.trim().split(" ");
+          double start = Double.parseDouble(sp[0]);
+          double end = Double.parseDouble(sp[2]);
+          double step = Double.parseDouble(sp[4]);
+          
+          String values = ""; double i;
+          for (i = start; i < end; i += step)
+          {
+            values = values + " " + Double.toString(i);
+          }
+          
+          if (values != "")
+          {
+            configs.put(configWord, values.trim()); } 
+          continue;
+        } 
+        if (line.contains("[")) {
+          
+          String configWord = line.substring(0, line.indexOf(":"));
+          String rest = line.substring(line.indexOf(":") + 1);
+          String values = rest.substring(rest.indexOf("[") + 1, rest.indexOf("]"));
+          
+          if (values != "")
+          {
+            configs.put(configWord, values.trim());
+          }
+        } 
+      } 
+      
+      in.close();
+    } catch (FileNotFoundException e) {
+      
+      System.out.println("Config file not created?!");
+      System.exit(1);
+    } 
+  }
+  
+  /**
+   * Write out all variables in SimConfigs to a file named
+   * <code>FILE_INFO</code>_configs.txt
+   */
+  public static void writeCurrentConfigs() {
+    try {
+      PrintWriter cf = new PrintWriter(new FileOutputStream(stamp() + SimConfigs.FILE_INFO + "_configs.txt"));
+      SimConfigs sc = new SimConfigs();
+      cf.print(sc);
+      cf.close();
+    }
+    catch (FileNotFoundException e) {
+      System.out.println("Error logging config settings");
+      System.out.println(e);
+    } 
+  }
+  
+  /**
+   * Output timestamp, run number, and an underscore
+   * @return	<code>timestamp + runNumber + "_"</code>
+   */
+  public static String stamp() {
+    return timestamp + runNumber + "_";
+  }
+}
 
 
 /* Location:              C:\Users\mljoh\Downloads\Default Model (Smanski Carp)\SyntSpec.jar!\SyntSpec\Wrapper.class
