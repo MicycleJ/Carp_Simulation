@@ -1,18 +1,5 @@
-genotypes to take in
-
-behavior: wt / transgenic
----------------
-sex-skew allele sail: ANNFF / ASSMM
-sex-skew allele sail, with maternal carryover: AmcNNFF / AmcSSMM
-gene drive, homozygous lethal: WW / GG
-gene drive, female -> male sex skew: ssWW / ssGG
-
-female lethal
-SSIMS
-
-
-** note, "seiningFishtoStayinLake" is a function that would let you specify what fish you 
-do not want to sein. i.e., if edited/transgenic fish that were "seined" were thrown back in the lake
+This is an edited version of the SyntSpec project, written by James Parker, and involving Siba Das, Maciej Maselko, James Parker, Przemek Bajer, and Michael J. Smanski.
+It is an agent-based model, featuring overlapping generations, fish growth, and many species parameters finely tuned to Carp. Questions concerning code can be directed to mljohnso@caltech.edu.
 
 # Table of Contents
 1. [Requirements](#Requirements)
@@ -52,7 +39,7 @@ _Gene_Generation.txt | For each year, the number of females and males of each ag
 .txt | For each year, the number of males and females of each age and of each Genotype inhabiting the lake. Each age gets its own row, and genotypes share a row | <pre>Simulation run #1 <br>Run,1,Year,1,Lake,Susan,Age,0,Number,45285---types:GW=24985 (males=12404/females=12581)\_\_WG=14123 (males=7184/females=6939)\_\_WW=6177 (males=3059/females=3118)\_\_ <br>Run,1,Year,1,Lake,Susan,Age,2,Number,4---types:WW=4 (males=4/females=0)__ <br>Run,1,Year,1,Lake,Susan,Age,3,Number,2---types:WW=2 (males=0/females=2)__ <br>Run,1,Year,1,Lake,Susan,Age,4,Number,204---types:GW=200 (males=100/females=100)\_\_WW=4 (males=1/females=3)__ <br>Run,1,Year,1,Lake,Susan,Age,5,Number,4---types:WW=4 (males=3/females=1)__ </pre>
 
 
-*Mass of each fish is calculated as follows: $6 \cdot {fish\_length}^{2.763} \cdot 10^{-8} $
+*Mass of each fish is calculated as follows: $6 \cdot {fish} {\_} {length}^{2.763} \cdot 10^{-8} $
 
 
 
